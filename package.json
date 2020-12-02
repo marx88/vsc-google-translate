@@ -25,6 +25,7 @@
     "activationEvents": [
         "workspaceContains:*.*",
         "onCommand:translates.translates",
+        "onCommand:translates.translator",
         "onCommand:translates.clipboard",
         "onCommand:translates.replace",
         "onCommand:translates.hover",
@@ -37,6 +38,11 @@
         "commands": [
             {
                 "command": "translates.translates",
+                "category": "Google Translate",
+                "title": "%translates.title%"
+            },
+            {
+                "command": "translates.translator",
                 "category": "Google Translate",
                 "title": "%translates.title%"
             },
@@ -81,6 +87,11 @@
                 "key": "ctrl+shift+t",
                 "mac": "cmd+shift+t",
                 "when": "editorHasSelection"
+            },
+            {
+                "command": "translates.translator",
+                "key": "ctrl+shift+o",
+                "mac": "cmd+shift+o"
             },
             {
                 "command": "translates.clipboard",

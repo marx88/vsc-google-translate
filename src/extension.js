@@ -9,6 +9,7 @@ function activate(context) {
 
     context.subscriptions.push(command.hoverDisposable);
     context.subscriptions.push(command.tranDisposable);
+    context.subscriptions.push(command.tranEmptyDisposable);
     context.subscriptions.push(command.switchDisposable);
     context.subscriptions.push(command.copyDisposable);
     context.subscriptions.push(command.replaceDisposable);

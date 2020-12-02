@@ -87,6 +87,39 @@ function noticeComment() {
     }
 }
 
+async function translating (text, showAll) {
+    barItem.word.show();
+    barItem.word.text = `$(pulse) ${locale['wait.message']}...`;
+
+    let word = `${locale['failed.message']}...`;
+    let candidate = [];
+    try {
+        let trans = await translate(text, langTo);
+        if (!trans) return;
+        console.log(trans)
+        word = trans.word
+        candidate = trans.candidate
+        noticeComment();
+    } catch (error) {
+        return vscode.window.showInformationMessage(error.message);
+    }
+
+    currentWord = { word, text, candidate };
+
+    barItem.word.tooltip = word;
+    if(text.length > maxSize) text = text.trim().slice(0, maxSize).trim() + '... '
+    if(word.length > maxSize) word = word.trim().slice(0, maxSize).trim() + '...'
+    barItem.word.text = `${text.trim()}: ${word.trim()}`;
+    barItem.word.command = 'translates.clipboard'
+    if (!showAll) {
+        vscode.window.showInformationMessage(`${text}: ${word}`);
+    }
+    
+    !showAll && candidate.length ? barItem.candidate.show() : barItem.candidate.hide();
+    barItem.candidate.text = `$(ellipsis)`
+    barItem.candidate.command = 'translates.candidate'
+}
+
 let hoverDisposable = vscode.languages.registerHoverProvider({scheme: 'file'}, {
     provideHover: async (document, position, token) => {
         let editor = vscode.window.activeTextEditor;
@@ -130,34 +163,25 @@ let tranDisposable = vscode.commands.registerCommand('translates.translates', as
     let text = selectionText();
     if (text == '') return;
 
-    barItem.word.show();
-    barItem.word.text = `$(pulse) ${locale['wait.message']}...`;
+    translating(text);
+});
 
-    let word = `${locale['failed.message']}...`;
-    let candidate = [];
-    try {
-        let trans = await translate(text, langTo);
-        if (!trans) return;
-        word = trans.word
-        candidate = trans.candidate
-        noticeComment();
-    } catch (error) {
-        return vscode.window.showInformationMessage(error.message);
-    }
-
-    currentWord = { word, text, candidate };
-
-    barItem.word.tooltip = word;
-    if(text.length > maxSize) text = text.trim().slice(0, maxSize).trim() + '... '
-    if(word.length > maxSize) word = word.trim().slice(0, maxSize).trim() + '...'
-    barItem.word.text = `${text.trim()}: ${word.trim()}`;
-    barItem.word.command = 'translates.clipboard'
-    
-    vscode.window.showInformationMessage(`${text}: ${word}`);
-    
-    candidate.length ? barItem.candidate.show() : barItem.candidate.hide();
-    barItem.candidate.text = `$(ellipsis)`
-    barItem.candidate.command = 'translates.candidate'
+let tranEmptyDisposable = vscode.commands.registerCommand('translates.translator', async function () {
+    vscode.window.showInputBox({
+        password:false,
+        ignoreFocusOut:false,
+        placeHolder:'请输入您要翻译的内容',
+        prompt:'',
+        validateInput:function(text){
+            return text === '' ? '请输入您要翻译的内容' : null;
+        }
+    }).then(function (text) {
+        console.log("用户输入："+text);
+        if (!text) {
+            return
+        }
+        translating(text, true);
+    });
 });
 
 let switchDisposable = vscode.commands.registerCommand('translates.hover', async function () {
@@ -317,6 +341,7 @@ module.exports = {
     initSetting,
     hoverDisposable,
     tranDisposable,
+    tranEmptyDisposable,
     switchDisposable,
     copyDisposable,
     replaceDisposable,
