@@ -23,6 +23,7 @@
 6. 设置界面，可设置翻译的目标语言
    ![设置界面](./asserts/setting.jpg)
 7. 暂时切换到其他翻译语言，直到关闭工作空间或修改配置。 `google-translate.switch`
+8. 翻译用户在弹框输入的内容`Ctrl + Shift + O`，目前翻译结果简单的显示在状态栏中；
    
 > Tips: 快捷键修改可以到 VSCode 的键盘快捷方式 ( `Ctrl + K Ctrl + S` ) 修改。
 
