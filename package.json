@@ -90,8 +90,8 @@
             },
             {
                 "command": "translates.translator",
-                "key": "ctrl+shift+o",
-                "mac": "cmd+shift+o"
+                "key": "ctrl+alt+o",
+                "mac": "cmd+alt+o"
             },
             {
                 "command": "translates.clipboard",
