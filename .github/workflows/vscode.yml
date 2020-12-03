@@ -17,7 +17,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x] # 配置所需node版本
+        node-version: [12.x] # 配置所需node版本
 
     steps: # 自动化步骤
     - uses: actions/checkout@v2 # 拉取仓库代码到操作系统
@@ -30,7 +30,7 @@ jobs:
     - name: Install vsce # 安装打包工具
       run: npm i -g vsce
     - name: Package # 打包
-      run: vsce package -o ./build/vsc-gogle-translate.vsix
+      run: vsce package -o ./vsc-gogle-translate.vsix
     - name: Create Release # 发布
       id: create_release
       uses: actions/create-release@v1
@@ -48,5 +48,5 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: ./build/vsc-gogle-translate.vsix
+        asset_path: ./vsc-gogle-translate.vsix
         asset_name: vsc-gogle-translate.vsix
