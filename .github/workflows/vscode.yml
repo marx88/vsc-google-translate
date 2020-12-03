@@ -5,10 +5,8 @@ name: vscode CI
 
 on:
   push:
-    branches:
-      - master # 只在master上push触发部署
-    paths-ignore: # 下列文件的变更不触发部署，可以自行添加
-      - LICENSE
+    tags: # Sequence of patterns matched against refs/tags
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   build:
