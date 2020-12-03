@@ -1,0 +1,33 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: vscode CI
+
+on:
+  push:
+    branches:
+      - master # 只在master上push触发部署
+    paths-ignore: # 下列文件的变更不触发部署，可以自行添加
+      - LICENSE
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest # 运行该脚本的操作系统
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x] # 配置所需node版本
+
+    steps: # 自动化步骤
+    - uses: actions/checkout@v2 # 拉取仓库代码到操作系统
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install dependencies  # 第二步，安装依赖
+      run: npm install
+    - name: Install vsce # 安装打包工具
+      run: npm i -g vsce
+    - name: Package # 打包
+      run: vsce package
